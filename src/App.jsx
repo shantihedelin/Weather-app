@@ -80,7 +80,7 @@ function App() {
               </button>
             </div>
 
-            {loading && <p>Loading weather data...</p>}
+            {/* {loading && <p>Loading weather data...</p>} */}
 
             <div className="flex flex-col items-center">
               {currentWeather && (
@@ -100,7 +100,11 @@ function App() {
               )}
 
               {forecast && forecast.list && (
-                <div className={`fade-in ${showForecast ? "show" : ""} pt-8 flex flex-col items-center`}>
+                <div
+                  className={`fade-in ${
+                    showForecast ? "show" : ""
+                  } pt-8 flex flex-col items-center`}
+                >
                   <div className="flex flex-row justify-around w-screen items-center md:justify-center space-x-4">
                     <h2 className="text-3xl">Five day forecast</h2>
                     <div className="flex items-center space-x-2">
