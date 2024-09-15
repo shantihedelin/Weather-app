@@ -118,7 +118,7 @@ function App() {
                     </div>
                   </div>
 
-                  <div className="bg-white rounded-xl border-t-xl w-auto flex flex-cols mx-8 mb-12 lg:w-screen lg:justify-around lg:pt-8 ">
+                  <div className="bg-white rounded-xl border-t-xl w-auto flex flex-cols mx-8 mb-12  lg:justify-around">
                     {filteredForecast.map((item, index) => {
                       const date = new Date(item.dt * 1000); // konvertera unix tiden till datum
                       const dayName = daysOfWeek[date.getDay()];
@@ -137,7 +137,7 @@ function App() {
                           // Om datumet matchar
                           totalRain += forecastItem.rain
                             ? forecastItem.rain["3h"] || 0
-                            : 0; // Summera regn om det finns
+                            : 0; // Summera regn om det finns`
                         }
                       });
 
@@ -145,7 +145,7 @@ function App() {
                         <div key={index} className="flex">
                           {filterType === "no filter" && (
                             <div className="flex flex-col">
-                              <div className="font-bold text-sm bg-sky-900 text-white pt-2 flex flex-col items-center w-24">
+                              <div className="font-bold text-sm bg-sky-900 text-white pt-2 flex flex-col md:px-4  items-center w-24 sm:w-auto lg:w-auto ">
                                 <p className="my-0">{dayName}</p>
                                 <p className="my-1">{formattedDate}</p>
                               </div>
