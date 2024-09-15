@@ -1,0 +1,95 @@
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+  background-image: url("./assets/weather-bg2.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+}
+
+.background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1; /* Bakgrundslager ligger bakom allt innehåll */
+  background-image: url("./assets/weather-bg2.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: white;
+  opacity: 0.5; /* Vit genomskinlighet över bakgrundsbilden */
+  z-index: -1; /* Detta lager ligger också bakom allt innehåll */
+}
+
+main {
+  position: relative;
+  z-index: 1; /* Innehållet ligger över bakgrunden och överlagringen */
+}
+
+body {
+  margin: 0;
+  display: flex;
+  place-items: center;
+  min-width: 320px;
+  min-height: 100vh;
+}
+
+h1 {
+  font-size: 3.2em;
+  line-height: 1.1;
+}
+
+button {
+  border: none;
+  border-right: 1px solid transparent;
+  border-top-right-radius: 10px;
+  border-bottom-right-radius: 10px;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: #ffffff;
+  cursor: pointer;
+}
+
+input {
+  border: none;
+  border-left: 1px solid transparent;
+  border-top-left-radius: 10px;
+  border-bottom-left-radius: 10px;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: #ffffff;
+  cursor: pointer;
+  padding: 4px;
+}
+
+button:focus,
+button:focus-visible {
+  outline: 4px auto -webkit-focus-ring-color;
+}
+
+.fade-in {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+}
+
+.fade-in.show {
+  opacity: 1;
+  transform: translateY(0);
+}
