@@ -9,6 +9,7 @@ import {
   selectForecast,
   selectLoading,
 } from "./redux/weatherSlice";
+import { current } from "@reduxjs/toolkit";
 
 function App() {
   const [city, setCity] = useState("");
@@ -43,6 +44,10 @@ function App() {
     setTimeout(() => setShowForecast(true), 1500);
   };
 
+  const weatherDescription =
+    currentWeather &&
+    `It is ${currentWeather.weather[0].description} with a temp of ${currentWeather.main.temp}°C in ${currentWeather.name}`;
+
   const filteredForecast =
     forecast && forecast.list
       ? forecast.list.filter((item) => {
@@ -66,20 +71,23 @@ function App() {
             "Search for forecast and current weather for multiple countries."
           }
         ></meta>
-        <>
-          <meta
-            property="og:title"
-            content={`Current weather in ${currentWeather.name}`}
-          ></meta>
-          <meta property="og:description" content={weatherDescription}></meta>
-          <meta
-            property="og:image"
-            content={`https://openweathermap.org/img/w/${currentWeather.weather[0].icon}.png`}
-          ></meta>
-          <meta property="og:url" content={window.location.href}></meta>
-          <meta property="og:type" content="website"></meta>
-        </>
+        {currentWeather && (
+          <>
+            <meta
+              property="og:title"
+              content={`Current weather in ${currentWeather.name}`}
+            ></meta>
+            <meta property="og:description" content={weatherDescription}></meta>
+            <meta
+              property="og:image"
+              content={`https://openweathermap.org/img/w/${currentWeather.weather[0].icon}.png`}
+            ></meta>
+            <meta property="og:url" content={window.location.href}></meta>
+            <meta property="og:type" content="website"></meta>
+          </>
+        )}
       </Helmet>
+
       <div className="background"></div>
       <div className="overlay"></div>
       <main className="flex min-h-screen flex-col w-screen">
