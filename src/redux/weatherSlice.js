@@ -7,14 +7,13 @@ const API_KEY = "25faf9bd781b596979946a62b18d503d";
 export const fetchWeather = createAsyncThunk(
   "weather/fetchWeather",
   async (city) => {
-    const response = await axios.get(
-      `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_KEY}&units=metric`
-    );
-    
+    const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_KEY}&units=metric`;
+    console.log("Fetching current weather from URL:", url); // Här loggar vi URL:en
+    const response = await axios.get(url);
     return response.data;
-    
   }
 );
+
 
 // Hämta 5-dagars prognos
 export const fetchForecast = createAsyncThunk(
@@ -25,7 +24,9 @@ export const fetchForecast = createAsyncThunk(
     );
     const filteredData = response.data.list.filter((item) =>
       item.dt_txt.includes("12:00:00")
+    
     );
+    console.log(response.data);
     return { ...response.data, list: filteredData };
   }
 );

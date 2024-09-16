@@ -1,3 +1,6 @@
+import "./App.css";
+import { Helmet } from "react-helmet-async";
+import { FaSearch } from "react-icons/fa";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchWeather, fetchForecast } from "./redux/weatherSlice";
@@ -6,17 +9,10 @@ import {
   selectForecast,
   selectLoading,
 } from "./redux/weatherSlice";
-import "./App.css";
-import { FaSearch } from "react-icons/fa";
 
 function App() {
   const [city, setCity] = useState("");
   const [filterType, setFilterType] = useState("no filter");
-  const [filterValue, setFilterValue] = useState(0);
-  const dispatch = useDispatch();
-  const currentWeather = useSelector(selectCurrentWeather);
-  const forecast = useSelector(selectForecast);
-  const loading = useSelector(selectLoading);
   const [showCity, setShowCity] = useState(false);
   const [showCurrentWeather, setShowCurrentWeather] = useState(false);
   const [showForecast, setShowForecast] = useState(false);
@@ -29,6 +25,10 @@ function App() {
     "Saturday",
     "Sunday",
   ];
+  const dispatch = useDispatch();
+  const currentWeather = useSelector(selectCurrentWeather);
+  const forecast = useSelector(selectForecast);
+  const loading = useSelector(selectLoading);
 
   const handleSearch = () => {
     dispatch(fetchWeather(city));
@@ -47,16 +47,39 @@ function App() {
     forecast && forecast.list
       ? forecast.list.filter((item) => {
           if (filterType === "temperature") {
-            return item.main.temp > filterValue;
+            return item.main.temp !== undefined;
           } else if (filterType === "wind") {
-            return item.wind.speed > filterValue;
+            return item.wind.speed !== undefined;
           }
           return true; // om inget filter är valt visas allt
         })
-      : [];
+      : []; // returnera en tom array om forecast inte finns tillgängligt
 
   return (
     <>
+      <Helmet>
+        <title>{`Forecast for ${city || "your location"}`}</title>
+        <meta
+          name="description"
+          content={
+            weatherDescription ||
+            "Search for forecast and current weather for multiple countries."
+          }
+        ></meta>
+        <>
+          <meta
+            property="og:title"
+            content={`Current weather in ${currentWeather.name}`}
+          ></meta>
+          <meta property="og:description" content={weatherDescription}></meta>
+          <meta
+            property="og:image"
+            content={`https://openweathermap.org/img/w/${currentWeather.weather[0].icon}.png`}
+          ></meta>
+          <meta property="og:url" content={window.location.href}></meta>
+          <meta property="og:type" content="website"></meta>
+        </>
+      </Helmet>
       <div className="background"></div>
       <div className="overlay"></div>
       <main className="flex min-h-screen flex-col w-screen">
@@ -126,22 +149,24 @@ function App() {
                     {filteredForecast.map((item, index) => {
                       const date = new Date(item.dt * 1000); // konvertera unix tiden till datum
                       const dayName = daysOfWeek[date.getDay()];
+                      // undefined = formatterar datum baserat på användarens lokala inställningar
                       const formattedDate = date.toLocaleDateString(undefined, {
-                        month: "short",
-                        day: "numeric",
+                        month: "short", // 3 bokst.
+                        day: "numeric", // siffror(datum)
                       });
+
                       let totalRain = 0;
 
                       forecast.list.forEach((forecastItem) => {
-                        const forecastDate = new Date(forecastItem.dt * 1000);
+                        const forecastDate = new Date(forecastItem.dt * 1000); // konvertera unix tiden till datum
                         const forecastDayName =
                           daysOfWeek[forecastDate.getDay()];
 
                         if (forecastDayName === dayName) {
                           // Om datumet matchar
-                          totalRain += forecastItem.rain
+                          totalRain += forecastItem.rain // Summera regn om det finns`
                             ? forecastItem.rain["3h"] || 0
-                            : 0; // Summera regn om det finns`
+                            : 0;
                         }
                       });
 
@@ -149,19 +174,19 @@ function App() {
                         <div key={index} className="flex">
                           {filterType === "no filter" && (
                             <div className="flex flex-col">
-                              <div className="font-bold text-sm bg-sky-900 text-white pt-2 flex flex-col md:px-4  items-center w-24 sm:w-auto lg:w-auto ">
+                              <div className="font-bold text-sm bg-sky-900 text-white pt-2 flex flex-col md:px-4 w-24 items-center sm:w-auto lg:w-auto ">
                                 <p className="my-0">{dayName}</p>
                                 <p className="my-1">{formattedDate}</p>
                               </div>
                               <div className="flex flex-col items-center px-3">
                                 <p className="text-sm">
-                                  Temp:{" "}
+                                  Temp:
                                   <p className="m-0 font-semibold">
                                     {item.main.temp}°C
                                   </p>
                                 </p>
                                 <p className="text-sm">
-                                  Wind:{" "}
+                                  Wind:
                                   <p className="m-0 font-semibold">
                                     {item.wind.speed} m/s
                                   </p>
